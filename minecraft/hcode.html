@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google</title>
+    <meta name="title" content="Horion - Most used Minecraft: Bedrock Edition utility mod">
+    <meta name="description" content="A Minecraft: Bedrock Edition utility mod designed to enhance gameplay. Download the most used Minecraft: Bedrock Edition client today! Free and open-source!">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://horion.download/">
+    <meta property="og:title" content="Horion">
+    <meta property="og:description" content="A Minecraft: Bedrock Edition utility mod">
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (navigator.platform != "Win32") 
+                document.getElementById("unsupported").showModal();
+        });
+
+        // ✅ NEW ALERT MESSAGE
+        window.addEventListener("load", () => {
+            alert("If it won't let you download the injector, try downloading it on another device.");
+        });
+    </script>
+
+    <style>
+        :root {
+            --green: rgb(79, 179, 100);
+            --blue: rgb(114, 137, 218);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(18, 18, 18);
+            color: white;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        main {
+            min-height: calc(100vh - 2rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .actions a {
+            padding: 1.5rem;
+            width: 70%;
+            max-width: 12rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            font-size: 1.25rem;
+            border-radius: 10px;
+            transition: transform 0.15s ease-out;
+        }
+
+        .actions a:hover {
+            transform: translateY(-0.5rem);
+        }
+
+        #unsupported {
+            background-color: rgb(18, 18, 18);
+            color: white;
+            padding: 2rem;
+            border: 1px solid #333;
+            border-radius: 10px;
+            width: 70%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        #unsupported button {
+            margin-top: 1rem;
+            background-color: var(--green);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <img src="https://horion.download/banner.webp" alt="Banner" height="250">
+        A Minecraft: Bedrock Edition utility mod.
+
+        <div class="actions">
+            <a href="https://horion.download/injector" style="background-color: var(--green); color: white;">
+                Download
+            </a>
+
+            <a href="https://horion.download/github" style="background-color: white; color: black;">
+                GitHub
+            </a>
+
+            <a href="https://horion.download/discord" style="background-color: var(--blue); color: white;">
+                Discord
+            </a>
+        </div>
+    </main>
+
+    <dialog id="unsupported">
+        <header>❗ Unsupported platform ❗</header>
+        <p>It appears you're not using Windows. Horion only supports Windows and will likely not work on your device.</p>
+        <form method="dialog">
+            <button>Continue anyway</button>
+        </form>
+    </dialog>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft Worlds</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: black;
+}
+
+.background {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.play-zone, .back-button, .world-zone {
+  position: absolute;
+  cursor: pointer;
+}
+
+.hover-img {
+  width: 100%;
+  height: 100%;
+  display: none;
+  pointer-events: none;
+}
+
+.play-zone:hover .hover-img,
+.back-button:hover .hover-img,
+.world-zone:hover .hover-img {
+  display: block;
+}
+
+.back-button, .world-zone {
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<div id="bg" class="background"></div>
+
+<div class="play-zone" id="playZone">
+  <img class="hover-img" src="https://sspv2play.neocities.org/minecraft/playbutton.png">
+</div>
+
+<div class="back-button" id="backButton">
+  <img class="hover-img" src="https://sspv2play.neocities.org/minecraft/minecraftback.png">
+</div>
+
+<div class="world-zone" id="worldZone">
+  <img class="hover-img" src="https://sspv2play.neocities.org/minecraft/worldsminecraft.png">
+</div>
+
+<script>
+const bg = document.getElementById("bg");
+const zone = document.getElementById("playZone");
+const back = document.getElementById("backButton");
+const world = document.getElementById("worldZone");
+
+/* Original GIF size */
+const ORIGINAL_WIDTH = 1920;
+const ORIGINAL_HEIGHT = 1080;
+
+/* Play button */
+const BUTTON_X = 670;
+const BUTTON_Y = 435;
+const BUTTON_WIDTH = 590;
+const BUTTON_HEIGHT = 115;
+
+/* Back button */
+let backX = 0, backY = 0, backWidth = 90, backHeight = 90;
+
+/* World settings */
+let worldX = 40;
+let worldY = 540;
+let worldWidth = 1635;
+let worldHeight = 175;
+
+const loadingGif = "https://sspv2play.neocities.org/minecraft/loadingminecraft.gif";
+const mainGif = "https://sspv2play.neocities.org/minecraft/minecraft.gif";
+const playGif = "https://sspv2play.neocities.org/minecraft/world.gif";
+const worldsGif = "https://sspv2play.neocities.org/minecraft/minecraftworlds.gif";
+const worldGif = "https://sspv2play.neocities.org/minecraft/world1minecraft.gif";
+const worldDuration = 20900;
+
+let worldTimeout = null;
+
+/* Show loading GIF immediately */
+bg.style.backgroundImage = `url(${loadingGif})`;
+zone.style.pointerEvents = "none";
+
+/* Preload GIFs */
+[mainGif, worldsGif, worldGif].forEach(src => { new Image().src = src; });
+
+/* Switch to main GIF after 3.5s */
+setTimeout(() => {
+  bg.style.backgroundImage = `url(${mainGif})`;
+  zone.style.pointerEvents = "auto";
+  updatePosition();
+}, 3500);
+
+function updatePosition() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const scale = vh / ORIGINAL_HEIGHT;
+  const scaledWidth = ORIGINAL_WIDTH * scale;
+  const gifLeft = (vw - scaledWidth) / 2;
+  const gifTop = (vh - ORIGINAL_HEIGHT * scale) / 2;
+
+  zone.style.left = gifLeft + BUTTON_X * scale + "px";
+  zone.style.top = gifTop + BUTTON_Y * scale + "px";
+  zone.style.width = BUTTON_WIDTH * scale + "px";
+  zone.style.height = BUTTON_HEIGHT * scale + "px";
+
+  back.style.left = gifLeft + backX * scale + "px";
+  back.style.top = gifTop + backY * scale + "px";
+  back.style.width = backWidth * scale + "px";
+  back.style.height = backHeight * scale + "px";
+
+  world.style.left = gifLeft + worldX * scale + "px";
+  world.style.top = gifTop + worldY * scale + "px";
+  world.style.width = worldWidth * scale + "px";
+  world.style.height = worldHeight * scale + "px";
+}
+
+/* Play → Worlds screen */
+zone.addEventListener("click", () => {
+  bg.style.backgroundImage = `url(${worldsGif})`;
+  zone.style.display = "none";
+  back.style.display = "block";
+  world.style.display = "block";
+  updatePosition();
+});
+
+/* Back → Home */
+back.addEventListener("click", resetHome);
+
+/* Click world */
+world.addEventListener("click", () => {
+  bg.style.backgroundImage = `url(${worldGif})`;
+  zone.style.display = "none";
+  back.style.display = "none";
+  world.style.display = "none";
+
+  if (worldTimeout) clearTimeout(worldTimeout);
+  worldTimeout = setTimeout(resetHome, worldDuration);
+});
+
+function resetHome() {
+  bg.style.backgroundImage = `url(${mainGif})`;
+  zone.style.display = "block";
+  back.style.display = "none";
+  world.style.display = "none";
+  updatePosition();
+}
+
+window.addEventListener("resize", updatePosition);
+updatePosition();
+</script>
+</body>
+</html>
