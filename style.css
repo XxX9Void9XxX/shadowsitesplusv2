@@ -1,0 +1,181 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: black;
+  color: white;
+}
+
+/* Hide everything by default */
+#sspContent { display: none; }
+
+#notFound {
+  display: none;
+  text-align: center;
+  padding-top: 50px;
+  color: black;
+  background: white;
+  height: 100vh;
+}
+
+body.ssp {
+  overflow: hidden;
+  text-align: center;
+  cursor: url('/mouse.png'), auto;
+}
+
+/* TOP BAR */
+#topBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: black;
+  z-index: 1000;
+  box-shadow: 0 0 20px #9b59b6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+#topBar h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #e0c3fc;
+  text-shadow: 0 0 10px #9b59b6;
+  animation: pulse 2s infinite alternate;
+}
+
+#topBar a {
+  cursor: pointer;
+  font-weight: bold;
+  background: none;
+  border: none;
+  color: #e0c3fc;
+  text-decoration: none;
+  text-shadow: 0 0 8px #9b59b6;
+  transition: 0.2s;
+}
+
+#topBar a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 15px #d580ff;
+}
+
+/* CLOCK */
+#clock {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 1rem;
+  color: #a020f0;
+  background: rgba(0,0,0,0.7);
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 2000;
+  box-shadow: 0 0 10px #9b59b6;
+}
+
+/* SETTINGS */
+#settingsIcon {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  z-index: 2000;
+  filter: drop-shadow(0 0 10px #9b59b6);
+  animation: glowPulse 2s infinite alternate;
+}
+
+#settingsMenu {
+  position: fixed;
+  bottom: 90px;
+  left: 20px;
+  width: 260px;
+  background: black;
+  border: 2px solid #9b59b6;
+  border-radius: 12px;
+  padding: 15px;
+  display: none;
+  z-index: 3000;
+  box-shadow: 0 0 20px #9b59b6;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+#settingsMenu h3 {
+  margin: 10px 0;
+  color: #e0c3fc;
+  border-bottom: 1px solid #9b59b6;
+  padding-bottom: 5px;
+}
+
+#settingsMenu label {
+  display: block;
+  margin: 12px 0;
+  cursor: pointer;
+}
+
+/* TOOL BUTTONS */
+.tool-btn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  background: transparent;
+  border: 1px solid #9b59b6;
+  color: #e0c3fc;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.tool-btn:hover {
+  background: #9b59b6;
+  color: white;
+  box-shadow: 0 0 10px #d580ff;
+}
+
+/* MAIN AREA */
+#mainContent {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 70px);
+  overflow: hidden;
+}
+
+#homeContent {
+  margin-top: 40px;
+}
+
+#contentFrame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: none;
+}
+
+/* Glow Disable */
+.noGlow * {
+  text-shadow: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  animation: none !important;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% { text-shadow: 0 0 5px #9b59b6; }
+  100% { text-shadow: 0 0 20px #d580ff; }
+}
+
+@keyframes glowPulse {
+  0% { filter: drop-shadow(0 0 5px #9b59b6); }
+  100% { filter: drop-shadow(0 0 20px #d580ff); }
+}

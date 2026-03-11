@@ -1,0 +1,61 @@
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+  function linkify(element) {
+    element.innerHTML = element.innerHTML.replace(urlRegex, function(url) {
+      return '<span class="fake-link" data-url="' + url + '">' + url + '</span>';
+    });
+  }
+
+  // Apply to everything below this script
+  let content = document.body;
+  linkify(content);
+
+  document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("fake-link")) {
+      window.open(e.target.getAttribute("data-url"), "_blank");
+    }
+  });
+});
+</script>
+
+<style>
+.fake-link {
+  cursor: pointer;
+  color: inherit; /* keeps same color */
+  text-decoration: none; /* removes underline */
+}
+.fake-link:hover {
+  text-decoration: underline; /* optional hover effect */
+}
+</style>
+https://classroomgoogle-cyan.vercel.app/
+https://rnicrosoftlogin.vercel.app/
+https://ixl-recommendations.vercel.app/
+https://play-prodigygame-com.vercel.app/
+https://frifgjdkdfjbfdheuoiworofrifgjdkdfjb.vercel.app/
+https://vercelappvercelapp-zeta.vercel.app/
+https://five-azure-53.vercel.app/
+https://vercelappvercelappvercelappvercelaq.vercel.app/
+https://clicklinkhere.vercel.app/
+https://ixldiagnostic.vercel.app/
+https://commonlit.vercel.app/
+https://wow.education.cellophaneslinger.net/
+https://educational.martinwguy.net/
+https://grandemass.bergbahnen-bezau.at/
+https://thatonefangameplayermadethisohyeah.twilightparadox.com/
+https://skibidi.ignorelist.com/
+https://absoulutecinema.veles-crimea.ru/
+https://mr.sullivan.is.the.goat.at.teaching-ngl.esdata.info/
+https://educational.martinwguy.net/
+https://lovemy12.mylocallan.de/
+https://josh-m.is.lwky.the.goat.at.pokemon.esdata.info/
+https://realplayernation.atelier-krois.de/
+https://schoology.all4you.ru/
+https://massive-lives-on.krishbartaula.com.np/
+https://harsh-eats-tacobell-and-indian-food.fundacioncidea.org.ar/
+https://google.net.games.com.es.chickenkiller.com/
+https://betbetter.chickenkiller.com/
+https://what-the-sigma.strangled.net/
+https://bpisfun.engramtech.com/
