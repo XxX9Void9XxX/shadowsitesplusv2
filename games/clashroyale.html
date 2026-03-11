@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadow Sites Plus</title>
+  <link rel="icon" href="https://shadowsitesplus.neocities.org/SSP.png" type="image/x-icon">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    a {
+      color: #e0c3fc;
+      text-decoration: none;
+    }
+
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px #9b59b6, 0 0 10px #8e44ad; }
+      50% { text-shadow: 0 0 15px #d580ff, 0 0 25px #9b59b6; }
+      100% { text-shadow: 0 0 5px #9b59b6, 0 0 10px #8e44ad; }
+    }
+
+    .content {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-frame {
+      width: 100%;
+      height: 600px;
+      max-width: 1000px;
+      border: none;
+      border-radius: 8px;
+      background: #000;
+      box-shadow: 0 0 20px #9b59b6;
+    }
+
+    .game-info {
+      margin-top: 20px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .game-info h1 {
+      font-size: 2rem;
+      color: #e0c3fc;
+      text-shadow: 0 0 5px #9b59b6, 0 0 10px #8e44ad;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite alternate;
+    }
+
+    .game-info .btn-group {
+      margin-top: 15px;
+    }
+
+    .game-info .btn-group button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: #fff;
+      background: linear-gradient(45deg, #9b59b6, #8e44ad);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #9b59b6;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .game-info .btn-group button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #d580ff, #9b59b6);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="content">
+    <iframe class="game-frame" src="/game/clashroyale" allowfullscreen></iframe>
+
+    <div class="game-info">
+      <h1>Clash Royale</h1>
+      <h2>Original link: https://www.greenfoot.org/scenarios/27793?embed=true</h2>
+      <div class="btn-group">
+        <button id="fullscreenBtn">Fullscreen</button>
+        <button onclick="refreshGame()">Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function refreshGame() {
+      const iframe = document.querySelector('.game-frame');
+      iframe.src = iframe.src;
+    }
+
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+      const iframe = document.querySelector('.game-frame');
+      if (iframe.requestFullscreen) iframe.requestFullscreen();
+      else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
+      else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+      else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+    });
+
+    function openBlankAndEmbed() {
+      const newWin = window.open();
+      newWin.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Shadow Sites Plus</title>
+          <style>
+            html, body { margin:0; height:100%; overflow:hidden; background:black; }
+          </style>
+        </head>
+        <body>
+          <iframe src="https://shadowsitesplus.neocities.org/home"
+            frameborder="0" style="width:100%; height:100%;"></iframe>
+        </body>
+        </html>
+      `);
+    }
+
+    // Hide link previews + block context menu
+    document.querySelectorAll('a').forEach(link => {
+      const href = link.getAttribute('href');
+
+      link.addEventListener('mouseenter', () => link.removeAttribute('href'));
+      link.addEventListener('mouseleave', () => link.setAttribute('href', href));
+      link.addEventListener('contextmenu', e => e.preventDefault());
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        window.location.href = href;
+      });
+      link.addEventListener('auxclick', e => {
+        e.preventDefault();
+        if (e.button === 1) window.open(href, '_blank');
+      });
+    });
+
+    window.addEventListener('contextmenu', e => e.preventDefault());
+  </script>
+
+</body>
+</html>
