@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shadow Sites Plus Browser</title>
+<link rel="icon" href="https://sspv2play.neocities.org/SSP.png" type="image/x-icon">
+
+<style>
+body,html{margin:0;height:100%;background:#000;color:#e0c3fc;font-family:Arial,sans-serif;overflow:hidden}
+#browser{display:flex;flex-direction:column;height:100%}
+#tabs{display:flex;align-items:center;background:#111;padding:5px;overflow-x:auto;white-space:nowrap}
+.tab{display:flex;align-items:center;gap:4px;padding:4px 10px;margin-right:4px;border-radius:6px;cursor:pointer;background:#222;color:#e0c3fc;box-shadow:0 0 6px #9b59b6;transition:.2s}
+.tab.active{background:linear-gradient(45deg,#9b59b6,#8e44ad);color:#fff;box-shadow:0 0 15px #9b59b6,0 0 30px #8e44ad}
+.tab:hover{transform:scale(1.05)}
+.tab img{width:16px;height:16px;border-radius:2px}
+.close-tab{color:#ff9ff3;cursor:pointer;margin-left:3px;font-weight:700}
+#addTab{padding:4px 10px;border-radius:6px;background:linear-gradient(45deg,#9b59b6,#8e44ad);color:#fff;cursor:pointer}
+#topBar{display:flex;align-items:center;padding:8px;background:#000;box-shadow:0 0 20px #9b59b6;gap:5px}
+#topBar input{flex:1;padding:6px 10px;border:none;border-radius:5px;font-size:16px;background:#111;color:#e0c3fc;text-shadow:0 0 5px #9b59b6}
+button{padding:6px 10px;border:none;border-radius:5px;background:linear-gradient(45deg,#9b59b6,#8e44ad);color:#fff;cursor:pointer;box-shadow:0 0 10px #9b59b6,0 0 20px #8e44ad;transition:.2s}
+button:hover{background:linear-gradient(45deg,#d580ff,#9b59b6);transform:scale(1.05)}
+iframe{flex:1;border:none;width:100%;height:100%;display:none}
+#bookmarkList{position:absolute;top:60px;right:10px;background:#111;color:#e0c3fc;border:1px solid #9b59b6;border-radius:8px;padding:8px;display:none;box-shadow:0 0 10px #9b59b6;z-index:10000}
+#bookmarkList div{padding:5px;cursor:pointer;border-radius:5px}
+#bookmarkList div:hover{background:linear-gradient(45deg,#9b59b6,#8e44ad);color:#fff}
+</style>
+</head>
+
+<body>
+<div id="browser">
+
+<div id="tabs">
+  <div class="tab active" data-id="0">
+    <img src="https://www.google.com/favicon.ico">
+    Google
+    <span class="close-tab">×</span>
+  </div>
+  <div id="addTab">＋</div>
+</div>
+
+<div id="topBar">
+  <button id="back">⟵</button>
+  <button id="forward">⟶</button>
+  <button id="refresh">⟳</button>
+  <input id="url" type="text" placeholder="Search Google or type URL...">
+  <button id="go">Go</button>
+  <button id="fullscreen">⛶</button>
+  <button id="bookmarkBtn">★</button>
+  <button id="showBookmarks">📚</button>
+</div>
+
+<div id="iframeContainer" style="flex:1;position:relative">
+  <iframe class="webview" src="https://sspv2play.neocities.org//browserhome" data-id="0" style="display:block"></iframe>
+</div>
+
+<div id="bookmarkList"></div>
+
+</div>
+
+<script>
+const tabsContainer=document.getElementById('tabs');
+const addTabBtn=document.getElementById('addTab');
+const iframeContainer=document.getElementById('iframeContainer');
+const urlInput=document.getElementById('url');
+const goBtn=document.getElementById('go');
+const backBtn=document.getElementById('back');
+const forwardBtn=document.getElementById('forward');
+const refreshBtn=document.getElementById('refresh');
+const fullscreenBtn=document.getElementById('fullscreen');
+const bookmarkBtn=document.getElementById('bookmarkBtn');
+const showBookmarksBtn=document.getElementById('showBookmarks');
+const bookmarkList=document.getElementById('bookmarkList');
+const tabsDiv=document.getElementById('tabs');
+const topBar=document.getElementById('topBar');
+
+let tabCount=1;
+let currentTab=0;
+let tabs=[{
+  id:0,
+  iframe:document.querySelector('.webview[data-id="0"]'),
+  tabDiv:document.querySelector('.tab[data-id="0"]')
+}];
+
+let bookmarks=JSON.parse(localStorage.getItem('ssp_bookmarks')||'[]');
+
+function updateBookmarksMenu(){
+  bookmarkList.innerHTML='';
+  if(bookmarks.length===0){
+    bookmarkList.innerHTML='<div>(No bookmarks)</div>';
+    return;
+  }
+  bookmarks.forEach(b=>{
+    const div=document.createElement('div');
+    div.textContent=b.name;
+    div.onclick=()=>openURL(b.url);
+    bookmarkList.appendChild(div);
+  });
+}
+
+function createTab(url='https://www.google.com/search?igu=1'){
+  const id=tabCount++;
+  const iframe=document.createElement('iframe');
+  iframe.className='webview';
+  iframe.dataset.id=id;
+  iframe.src=url;
+  iframe.style.display='none';
+  iframeContainer.appendChild(iframe);
+
+  const tabDiv=document.createElement('div');
+  tabDiv.className='tab';
+  tabDiv.dataset.id=id;
+  tabDiv.innerHTML='<img src="https://www.google.com/favicon.ico"> New Tab <span class="close-tab">×</span>';
+  tabsContainer.insertBefore(tabDiv,addTabBtn);
+
+  tabs.push({id,iframe,tabDiv});
+  setActiveTab(id);
+}
+
+function closeTab(id){
+  const tab=tabs.find(t=>t.id===id);
+  if(!tab) return;
+  tab.iframe.remove();
+  tab.tabDiv.remove();
+  tabs=tabs.filter(t=>t.id!==id);
+  if(tabs.length>0) setActiveTab(tabs[tabs.length-1].id);
+  else createTab();
+}
+
+function setActiveTab(id){
+  tabs.forEach(t=>{
+    t.iframe.style.display='none';
+    t.tabDiv.classList.remove('active');
+  });
+  const active=tabs.find(t=>t.id===id);
+  if(active){
+    active.iframe.style.display='block';
+    active.tabDiv.classList.add('active');
+    currentTab=id;
+    urlInput.value=active.iframe.src;
+  }
+}
+
+function openURL(url){
+  const active=tabs.find(t=>t.id===currentTab);
+  if(!active) return;
+  active.iframe.src=url;
+  urlInput.value=url;
+}
+
+addTabBtn.onclick=()=>createTab();
+
+goBtn.onclick=()=>{
+  const query=urlInput.value.trim();
+  if(!query) return;
+  const url=query.startsWith('http')?query:`https://www.google.com/search?igu=1&q=${encodeURIComponent(query)}`;
+  openURL(url);
+};
+
+urlInput.addEventListener('keypress',e=>{
+  if(e.key==='Enter') goBtn.click();
+});
+
+refreshBtn.onclick=()=>{
+  const f=tabs.find(t=>t.id===currentTab).iframe;
+  f.src=f.src;
+};
+
+backBtn.onclick = () => {
+  const f=tabs.find(t=>t.id===currentTab).iframe;
+  f.contentWindow.history.back();
+};
+
+forwardBtn.onclick = () => {
+  const f=tabs.find(t=>t.id===currentTab).iframe;
+  f.contentWindow.history.forward();
+};
+
+// Updated fullscreen button
+fullscreenBtn.onclick = () => {
+  const active = tabs.find(t => t.id === currentTab);
+  if (!active) return;
+
+  const win = window.open('about:blank', '_blank');
+  if (!win) return alert('Popup blocked!');
+
+  win.document.write(`
+    <html>
+      <head>
+        <title>${active.iframe.src}</title>
+        <style>body,html{margin:0;height:100%}iframe{width:100%;height:100%;border:none;}</style>
+      </head>
+      <body>
+        <iframe src="${active.iframe.src}" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+      </body>
+    </html>
+  `);
+  win.document.close();
+};
+
+bookmarkBtn.onclick=()=>{
+  const active=tabs.find(t=>t.id===currentTab);
+  if(!active) return;
+  const name=prompt('Bookmark name:',active.iframe.src);
+  if(name){
+    bookmarks.push({name,url:active.iframe.src});
+    localStorage.setItem('ssp_bookmarks',JSON.stringify(bookmarks));
+    updateBookmarksMenu();
+    alert('Bookmarked!');
+  }
+};
+
+showBookmarksBtn.onclick=()=>{
+  bookmarkList.style.display=bookmarkList.style.display==='block'?'none':'block';
+  updateBookmarksMenu();
+};
+
+tabsContainer.addEventListener('click',e=>{
+  const tabDiv=e.target.closest('.tab');
+  if(!tabDiv) return;
+  const id=parseInt(tabDiv.dataset.id);
+  if(e.target.classList.contains('close-tab')) closeTab(id);
+  else setActiveTab(id);
+});
+
+function checkHash(){
+  if(!location.hash) return;
+
+  const hash=decodeURIComponent(location.hash.substring(1));
+
+  if(hash.startsWith('http')){
+    tabsDiv.style.display='none';
+    topBar.style.display='none';
+    openURL(hash);
+    return;
+  }
+
+  if(hash.startsWith('search=')){
+    const query=hash.substring(7);
+    if(query){
+      urlInput.value=query;
+      openURL(`https://www.google.com/search?igu=1&q=${encodeURIComponent(query)}`);
+    }
+    return;
+  }
+
+  if(hash.startsWith('site=')){
+    let site=hash.substring(5);
+    if(!site.startsWith('http')) site='https://'+site;
+    urlInput.value=site;
+    openURL(site);
+    return;
+  }
+}
+
+updateBookmarksMenu();
+checkHash();
+</script>
+
+</body>
+</html>
